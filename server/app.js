@@ -3,10 +3,10 @@ const express = require("express");
 const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-
+const mongoose = require('mongoose')
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
-
+const bodyParser = require('body-parser')
 const { json, urlencoded } = express;
 
 var app = express();
@@ -16,7 +16,7 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, "public")));
-
+app.use(bodyParser.json())
 app.use("/", indexRouter);
 app.use("/ping", pingRouter);
 
@@ -24,6 +24,11 @@ app.use("/ping", pingRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+app.use(express.static(__dirname + '/client/build/'));
+mongoose.connect(process.env.mongodbConnect, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
+  console.log('connected to db')
+})
 
 // error handler
 app.use(function(err, req, res, next) {
