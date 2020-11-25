@@ -26,7 +26,7 @@ app.use(function(req, res, next) {
 
 app.use(express.static(__dirname + '/client/build/'));
 mongoose.connect(process.env.mongodbConnect, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
-  console.log('connected to mongo')
+  console.log('connected to mongodb')
 })
 
 // error handler
