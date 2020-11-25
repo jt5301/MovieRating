@@ -3,6 +3,7 @@ const router = express.Router();
 const omdbRootUrl = `http://www.omdbapi.com/?apikey=${process.env.omdbKey}&`
 const axios = require ('axios')
 const RatedMovie = require('../models/rated')
+
 router.get("/search/:keywords", async (req, res, next) => {
   const movie = await axios.get(omdbRootUrl+`s=moonlight&type=movie`)//update here
   console.log(movie.data)
