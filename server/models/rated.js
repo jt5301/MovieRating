@@ -1,12 +1,17 @@
 const mongoose = require('mongoose')
 const ratedSchema = mongoose.Schema({
-  user: {
+  movieId: {
     type: String,
     required: true
   },
-  list: {
-    type: Object
+  thumbsUp:{
+    type:Number,
+    required:true
+  },
+  thumbsDown:{
+    type:Number,
+    required:true
   }
 })
 
-module.exports = mongoose.model('rated', ListSchema)
+module.exports = mongoose.model('Movies', ratedSchema)
