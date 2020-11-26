@@ -17,9 +17,10 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 4,
     backgroundColor: '#fcfcfb',
   },
-  logo: {
+  name: {
     marginTop: '18px'
   }
+
 }))
 
 const NavbarSearch = () => {
@@ -33,7 +34,7 @@ const NavbarSearch = () => {
   return (
     <AppBar position="relative">
       <Toolbar className={classes.navContainer} >
-        <Typography className={classes.logo} component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+        <Typography className={classes.name} component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
           YearOne Movie Rating
       </Typography>
         <Typography variant="h6" color="inherit" noWrap>

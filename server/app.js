@@ -15,16 +15,18 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, "public")));
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use("/movies", movieRouter);
 
+
+app.use(express.static(__dirname + '/client/build/'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-app.use(express.static(__dirname + '/client/build/'));
 mongoose.connect(process.env.mongodbConnect, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
   console.log('connected to mongodb')
 })
@@ -36,8 +38,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.json({ error: err });
+  res.status(err.status || 500).send('error');
 });
 
 module.exports = app;
