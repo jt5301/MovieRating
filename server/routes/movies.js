@@ -5,14 +5,13 @@ const axios = require ('axios')
 const RatedMovie = require('../models/rated')
 
 router.get("/search/:keywords", async (req, res, next) => {
-  const movie = await axios.get(omdbRootUrl+`s=${req.params.keywords}&type=movie`)//update here
+  const movie = await axios.get(omdbRootUrl+`s=${req.params.keywords}&type=movie`)
   res.status(200).json(movie.data.Search);
 
 });
 
-router.get('/getMoreInfo',async(req,res,next)=>{
-  const movie = await axios.get(omdbRootUrl+`i=tt4975722&plot=full`)//update here
-  console.log(movie)
+router.get('/getMoreInfo/:imdbID',async(req,res,next)=>{
+  const movie = await axios.get(omdbRootUrl+`i=${req.params.imdbID}&plot=full`)
   res.status(200).json(movie.data)
 })
 
@@ -24,7 +23,6 @@ router.post('/setMovieRating',async(req,res,next)=>{
   })
   try {
     const savedMovie = await movie.save()
-    console.log(savedMovie)
     res.status(200).json('test success')
   } catch (error) {
     console.error(error)
