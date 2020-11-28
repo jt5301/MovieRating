@@ -5,6 +5,18 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import axios from 'axios'
 
 const useStyles = makeStyles((theme)=>({
+  dialogBox:{
+    "& .MuiPaper-root": {
+      width:'75%',
+      height:'75%',
+    },
+  },
+  posterContainer:{
+  width:'100%',
+  marginBottom:'3%',
+  display:'flex',
+  justifyContent: 'center'
+  },
   card: {
     height: '100%',
     display: 'flex',
@@ -14,39 +26,49 @@ const useStyles = makeStyles((theme)=>({
   cardMedia: {
     paddingTop: '100%', // 16:9
   },
-  poster:{
-    height: '100%',
-  },
   cardContent: {
     flexGrow: 1,
   },
   cardActions:{
     justifyContent: 'center'
   },
-  title:{
-    textAlign:'center'
-  },
-  dialogClose:{
-    width:'10%',
-    paddingLeft:'10px',
-    fontSize:'x-large',
-    borderRadius:'20px',
-    height:'40px',
-    transform: 'rotate(45deg)'
-  },
-  dialogBox:{
-      "& .MuiPaper-root": {
-        width:'100%',
-        height:'100%',
-  },
+  dialogTitle:{
+    "& .MuiTypography-root":{
+      fontSize:'x-Large'
+    },
+    textAlign:'center',
 
+  },
+  extraInfoItem:{
+    display:'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    fontWeight:'bold',
+    marginBottom:'2%',
+    fontSize:'small',
+    marginLeft:'5%'
+  },
+  extraInfo:{
+    marginBottom:'3%',
+    display:'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent:'center'
+  },
+  extraInfoText:{
+    textAlign:'center',
+    fontWeight:'normal'
+  },
+  imdbLink:{
+    textDecoration:'none',
+    color:'inherit'
+  }
 }
-  // font-size: xx-large;border-radius: 20px;margin-top: 5px;margin-left: 5px;height: 40px;width: 40px;background-color: white;transform: rotate(45deg);'
-}))
+))
 
 function MoreInfoDialog(props){
   const classes = useStyles()
-  console.log(props)
+  console.log(props.basicInfo)
   return(
     <div>
       <Dialog
@@ -54,20 +76,29 @@ function MoreInfoDialog(props){
         onClose={props.handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        className = {classes.dialogBox}
       >
         <DialogTitle className = {classes.dialogTitle} id="alert-dialog-title">{props.basicInfo.Title}</DialogTitle>
-        <DialogContent>
-        <img src = {props.basicInfo.Poster}/>
+        <DialogContent className = {classes.contentContainer}>
+        <div id = 'movieInfo' className = {classes.posterContainer}>
+          <img src = {props.basicInfo.Poster}/>
+          <div className = {classes.extraInfo}>
+            <div className = {classes.extraInfoItem}>Date Released: <div className = {classes.extraInfoText}>{props.basicInfo.Year} </div> </div>
+            <div className = {classes.extraInfoItem}>Director(s): <div className = {classes.extraInfoText}>{props.detailedInfo.Director} </div> </div>
+            <div className = {classes.extraInfoItem}>Writer(s): <div className = {classes.extraInfoText}>{props.detailedInfo.Writer} </div> </div>
+            <div className = {classes.extraInfoItem}>Cast: <div className = {classes.extraInfoText}>{props.detailedInfo.Actors}</div></div>
+          </div>
+        </div>
           <DialogContentText id="alert-dialog-description">
             {props.detailedInfo.Plot}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={props.onClose} color="primary">
-            Disagree
+          <a className = {classes.imdbLink} href = {`https://www.imdb.com/title/${props.basicInfo.imdbID}/`}>IMDB Page</a>
           </Button>
           <Button onClick={props.onClose} color="primary" autoFocus>
-            Agree
+            Close
           </Button>
         </DialogActions>
       </Dialog>
