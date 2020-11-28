@@ -29,7 +29,7 @@ const NavbarSearch = () => {
   const [search, setSearch] = useState('')
   const submitSearch = (event) => {
     event.preventDefault()
-    searchTerm.setSearchTerm(search)
+    searchTerm.setMovieKeyword(search)
   }
   return (
     <AppBar position="relative">

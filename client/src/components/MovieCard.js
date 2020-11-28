@@ -1,19 +1,21 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { Button, TextField,Grid,Card,CardActions,CardContent,CardMedia,Typography,DialogTitle,Dialog,DialogContent,DialogContentText,DialogActions,makeStyles} from '@material-ui/core';
+import React, {useState, useEffect } from 'react'
+import { Button,Grid,Card,CardActions,CardActionArea,CardContent,CardMedia,Typography,DialogTitle,Dialog,DialogContent,DialogContentText,DialogActions,makeStyles} from '@material-ui/core';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import axios from 'axios'
 
 const useStyles = makeStyles((theme)=>({
   dialogBox:{
-    "& .MuiPaper-root": {
+    "&.MuiPaper-root": {
       width:'75%',
       height:'75%',
     },
   },
   posterContainer:{
+    "&.MuiDialogContent-root":{
+      height:'100%'
+    },
   width:'100%',
-  marginBottom:'3%',
   display:'flex',
   justifyContent: 'center'
   },
@@ -37,7 +39,6 @@ const useStyles = makeStyles((theme)=>({
       fontSize:'x-Large'
     },
     textAlign:'center',
-
   },
   extraInfoItem:{
     display:'flex',
@@ -68,12 +69,15 @@ const useStyles = makeStyles((theme)=>({
 
 function MoreInfoDialog(props){
   const classes = useStyles()
-  console.log(props.basicInfo)
+
+  function onClose(){
+    props.handleClose()
+  }
   return(
     <div>
       <Dialog
         open={props.open}
-        onClose={props.handleClose}
+        onClose={onClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         className = {classes.dialogBox}
@@ -89,15 +93,18 @@ function MoreInfoDialog(props){
             <div className = {classes.extraInfoItem}>Cast: <div className = {classes.extraInfoText}>{props.detailedInfo.Actors}</div></div>
           </div>
         </div>
-          <DialogContentText id="alert-dialog-description">
+
+        </DialogContent>
+        <DialogContent>
+        <DialogContentText id="alert-dialog-description">
             {props.detailedInfo.Plot}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={props.onClose} color="primary">
+          <Button autoFocus onClick={props.onClose} color="primary">
           <a className = {classes.imdbLink} href = {`https://www.imdb.com/title/${props.basicInfo.imdbID}/`}>IMDB Page</a>
           </Button>
-          <Button onClick={props.onClose} color="primary" autoFocus>
+          <Button onClick={onClose} color="primary" autoFocus>
             Close
           </Button>
         </DialogActions>
@@ -121,6 +128,9 @@ const MovieCard = (props) => {
     }
     getMovieDetails()
   },[])
+  function test(){
+    console.log('test')
+  }
 
   function handleOpenDialog(){
     setOpen(true)
@@ -130,15 +140,18 @@ const MovieCard = (props) => {
   };
   const classes = useStyles();
   return (
-              <Grid item   md={4}>
+              <Grid item md={4}>
                 <Card className={classes.card}>
+                <CardActionArea onClick = {handleOpenDialog}>
                   <CardMedia
                     className={classes.cardMedia}
                     image={props.movie.Poster}
                     title="Image title"
                   />
+                </CardActionArea>
+
                   <CardContent className={classes.cardContent}>
-                    <Typography className = {classes.title} gutterBottom variant="h5" component="h2">
+                    <Typography className = {classes.dialogTitle} gutterBottom variant="h5" component="h2">
                       {props.movie.Title}
                     </Typography>
                   </CardContent>
@@ -149,7 +162,7 @@ const MovieCard = (props) => {
                     <Button size="small" color="primary" onClick = {handleOpenDialog}>
                       More Info
                     </Button>
-                    <MoreInfoDialog basicInfo = {props.movie} detailedInfo = {movieDetails} open={open} onClose={handleClose} />
+                    <MoreInfoDialog basicInfo = {props.movie} detailedInfo = {movieDetails} open={open} handleClose={handleClose} />
                     <Button size="small" color="primary">
                       <ThumbDownIcon/>
                     </Button>
