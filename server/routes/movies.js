@@ -11,38 +11,53 @@ router.get("/search/:keywords", async (req, res, next) => {
 });
 
 router.get('/getMoreInfo/:imdbID',async(req,res,next)=>{
-  const movie = await axios.get(omdbRootUrl+`i=${req.params.imdbID}&plot=full`)
-  res.status(200).json(movie.data)
-})
-
-router.post('/setMovieRating',async(req,res,next)=>{
-  const movie = new RatedMovie({
-    movieId:'tt4975722',//update here
-    thumbsUp:1,//update here
-    thumbsDown:0//update here
-  })
   try {
-    await movie.save()
-    res.status(200).json('test success')
+    const movie = await axios.get(omdbRootUrl+`i=${req.params.imdbID}&plot=full`)
+    res.status(200).json(movie.data)
   } catch (error) {
     console.error(error)
   }
 })
 
-router.put('/changeMovieRating',async(req,res,next)=>{
+router.get('/getMovieFromDB/:imdbID',async(req,res,next)=>{
   try {
     const movie = await RatedMovie.findOne({
-      movieId:'tt4975722'//update here
+      movieId : req.params.imdbID
     })
-    const updateRating = {
-      $set: {
-         thumbsUp: movie.thumbsUp+=1,//update here
-      },
-   };
+    if(!movie){res.status(204).json({})}
+    else res.status(200).json(movie)
+  } catch (error) {
+    console.error(error)
+  }
+})
+
+router.post('/setMovieRating/:imdbID',async(req,res,next)=>{
+  const movie = new RatedMovie({
+    movieId:req.params.imdbID,//update here
+    thumbsUp:0,//update here
+    thumbsDown:0//update here
+  })
+  try {
+    await movie.save()
+    res.status(201).json('test success')
+  } catch (error) {
+    console.error(error)
+  }
+})
+
+router.put('/changeMovieRating/:imdbID',async(req,res,next)=>{
+  console.log(req.body)
+  try {
+      const updateRating = {
+        $set: {
+           thumbsUp: req.body.thumbsDown,//
+           thumbsDown:req.body.thumbsDown
+        },
+     };
     await RatedMovie.updateOne({
-      movieId:'tt4975722'//update here
+      movieId:req.params.imdbID//update here
     },updateRating)
-    res.status(200).json('test success')
+    res.status(200).json('success')
   } catch (error) {
     console.error(error)
   }

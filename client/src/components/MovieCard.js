@@ -44,8 +44,11 @@ const useStyles = makeStyles((theme)=>({
 const MovieCard = (props) => {
   const [movieDetails,setMovieDetails] = useState({})
   const [open,setOpen] = useState(false)
-  const [thumbsUp,setThumbsUp] = useState(0)
-  const [thumbsDown,setThumbsDown] = useState(0)
+  const [ratingButtons, setRatingButtons] = useState({thumbsUp:false,thumbsDown:false})
+  let [thumbsUpCounter,setThumbsUp] = useState(0)
+  let [thumbsDownCounter,setThumbsDown] = useState(0)
+  let movieInDB = false
+
   useEffect(()=>{
     async function getMovieDetails(){
       try {
@@ -55,8 +58,65 @@ const MovieCard = (props) => {
         console.error(error)
       }
     }
+    async function getMovieFromDB(){
+      try {
+        let res = await axios.get(`/movies/getMovieFromDB/${props.movie.imdbID}`)
+        if(res.data){
+          setThumbsUp(res.data.thumbsUp)
+          setThumbsDown(res.data.thumbsDown)
+        }
+
+      } catch (error) {
+        console.error(error)
+      }
+    }
     getMovieDetails()
+    getMovieFromDB()
   },[])
+
+  async function handleRating (rating){
+    console.log(movieInDB)
+    if(!movieInDB){
+      movieInDB = true
+      console.log(movieInDB)
+      try {
+        await axios.post(`/movies/setMovieRating/${props.movie.imdbID}`)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    if(rating === 'up'){
+      if(ratingButtons.thumbsDown){
+        return
+      }
+      if(!ratingButtons.thumbsUp){
+        setThumbsUp(thumbsUpCounter+=1)
+        setRatingButtons({...ratingButtons, thumbsUp:true})
+      }
+      if(ratingButtons.thumbsUp){
+        setThumbsUp(thumbsUpCounter-=1)
+        setRatingButtons({...ratingButtons, thumbsUp:false})
+      }
+    }
+    if(rating === 'down'){
+      if(ratingButtons.thumbsUp){
+        return
+      }
+      if(!ratingButtons.thumbsDown){
+        setThumbsDown(thumbsDownCounter+=1)
+        setRatingButtons({...ratingButtons, thumbsDown:true})
+      }
+      if(ratingButtons.thumbsDown){
+        setThumbsDown(thumbsDownCounter-=1)
+        setRatingButtons({...ratingButtons, thumbsDown:false})
+      }
+    }
+    try {
+      await axios.put(`/movies/changeMovieRating/${props.movie.imdbID}`,{thumbsUp:thumbsUpCounter,thumbsDown:thumbsDownCounter})
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   function handleOpenDialog(){
     setOpen(true)
@@ -83,22 +143,22 @@ const MovieCard = (props) => {
                   </CardContent>
                   <CardContent className = {classes.cardCounter}>
                     <div className = {classes.counter} style = {{color:'#12395E'}}>
-                      0
+                      {thumbsUpCounter}
                     </div>
                     <React.Fragment></React.Fragment>
                     <div className = {classes.counter} style = {{color:'red'}}>
-                      0
+                      {thumbsDownCounter}
                     </div>
                   </CardContent>
                   <CardActions className = {classes.cardActions}>
-                    <Button className = {classes.cardButtons} size="small" color="primary">
+                    <Button onClick = {()=>{handleRating('up')}} className = {classes.cardButtons} size="small" color="primary">
                       <ThumbUpIcon/>
                     </Button>
                     <Button className = {classes.cardButtons} size="small" color="primary" onClick = {handleOpenDialog}>
                       More Info
                     </Button>
                     <MoreInfoDialog basicInfo = {props.movie} detailedInfo = {movieDetails} open={open} handleClose={handleClose} />
-                    <Button className = {classes.cardButtons} size="small" color="primary">
+                    <Button onClick = {()=>{handleRating('down')}} className = {classes.cardButtons} size="small" color="primary">
                       <ThumbDownIcon/>
                     </Button>
                   </CardActions>
