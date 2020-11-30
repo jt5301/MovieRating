@@ -1,23 +1,18 @@
 import React, {useState, useEffect } from 'react'
-import { Button,Grid,Card,CardActions,CardActionArea,CardContent,CardMedia,Typography,DialogTitle,Dialog,DialogContent,DialogContentText,DialogActions,makeStyles} from '@material-ui/core';
+import { Button,Grid,Card,CardActions,CardActionArea,CardContent,CardMedia,Typography,makeStyles} from '@material-ui/core';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import {MoreInfoDialog} from './MoreInfoDialog'
 import axios from 'axios'
 
 const useStyles = makeStyles((theme)=>({
-  dialogBox:{
-    "&.MuiPaper-root": {
-      width:'75%',
-      height:'75%',
-    },
+  cardCounter:{
+    display:'flex',
+    justifyContent:'space-around'
   },
-  posterContainer:{
-    "&.MuiDialogContent-root":{
-      height:'100%'
-    },
-  width:'100%',
-  display:'flex',
-  justifyContent: 'center'
+  counter:{
+    fontSize: 'large',
+    fontWeight: 'bold',
   },
   card: {
     height: '100%',
@@ -32,91 +27,25 @@ const useStyles = makeStyles((theme)=>({
     flexGrow: 1,
   },
   cardActions:{
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-  dialogTitle:{
+  cardButtons:{
+    color:theme.palette.secondary.main
+  },
+  title:{
     "& .MuiTypography-root":{
       fontSize:'x-Large'
     },
     textAlign:'center',
   },
-  extraInfoItem:{
-    display:'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    fontWeight:'bold',
-    marginBottom:'2%',
-    fontSize:'small',
-    marginLeft:'5%'
-  },
-  extraInfo:{
-    marginBottom:'3%',
-    display:'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent:'center'
-  },
-  extraInfoText:{
-    textAlign:'center',
-    fontWeight:'normal'
-  },
-  imdbLink:{
-    textDecoration:'none',
-    color:'inherit'
-  }
 }
 ))
-
-function MoreInfoDialog(props){
-  const classes = useStyles()
-
-  function onClose(){
-    props.handleClose()
-  }
-  return(
-    <div>
-      <Dialog
-        open={props.open}
-        onClose={onClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        className = {classes.dialogBox}
-      >
-        <DialogTitle className = {classes.dialogTitle} id="alert-dialog-title">{props.basicInfo.Title}</DialogTitle>
-        <DialogContent className = {classes.contentContainer}>
-        <div id = 'movieInfo' className = {classes.posterContainer}>
-          <img src = {props.basicInfo.Poster}/>
-          <div className = {classes.extraInfo}>
-            <div className = {classes.extraInfoItem}>Date Released: <div className = {classes.extraInfoText}>{props.basicInfo.Year} </div> </div>
-            <div className = {classes.extraInfoItem}>Director(s): <div className = {classes.extraInfoText}>{props.detailedInfo.Director} </div> </div>
-            <div className = {classes.extraInfoItem}>Writer(s): <div className = {classes.extraInfoText}>{props.detailedInfo.Writer} </div> </div>
-            <div className = {classes.extraInfoItem}>Cast: <div className = {classes.extraInfoText}>{props.detailedInfo.Actors}</div></div>
-          </div>
-        </div>
-
-        </DialogContent>
-        <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-            {props.detailedInfo.Plot}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={props.onClose} color="primary">
-          <a className = {classes.imdbLink} href = {`https://www.imdb.com/title/${props.basicInfo.imdbID}/`}>IMDB Page</a>
-          </Button>
-          <Button onClick={onClose} color="primary" autoFocus>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  )
-}
 
 const MovieCard = (props) => {
   const [movieDetails,setMovieDetails] = useState({})
   const [open,setOpen] = useState(false)
-
+  const [thumbsUp,setThumbsUp] = useState(0)
+  const [thumbsDown,setThumbsDown] = useState(0)
   useEffect(()=>{
     async function getMovieDetails(){
       try {
@@ -128,9 +57,6 @@ const MovieCard = (props) => {
     }
     getMovieDetails()
   },[])
-  function test(){
-    console.log('test')
-  }
 
   function handleOpenDialog(){
     setOpen(true)
@@ -151,19 +77,28 @@ const MovieCard = (props) => {
                 </CardActionArea>
 
                   <CardContent className={classes.cardContent}>
-                    <Typography className = {classes.dialogTitle} gutterBottom variant="h5" component="h2">
+                    <Typography className = {classes.title} gutterBottom variant="h5" component="h2">
                       {props.movie.Title}
                     </Typography>
                   </CardContent>
+                  <CardContent className = {classes.cardCounter}>
+                    <div className = {classes.counter} style = {{color:'#12395E'}}>
+                      0
+                    </div>
+                    <React.Fragment></React.Fragment>
+                    <div className = {classes.counter} style = {{color:'red'}}>
+                      0
+                    </div>
+                  </CardContent>
                   <CardActions className = {classes.cardActions}>
-                    <Button size="small" color="primary">
+                    <Button className = {classes.cardButtons} size="small" color="primary">
                       <ThumbUpIcon/>
                     </Button>
-                    <Button size="small" color="primary" onClick = {handleOpenDialog}>
+                    <Button className = {classes.cardButtons} size="small" color="primary" onClick = {handleOpenDialog}>
                       More Info
                     </Button>
                     <MoreInfoDialog basicInfo = {props.movie} detailedInfo = {movieDetails} open={open} handleClose={handleClose} />
-                    <Button size="small" color="primary">
+                    <Button className = {classes.cardButtons} size="small" color="primary">
                       <ThumbDownIcon/>
                     </Button>
                   </CardActions>

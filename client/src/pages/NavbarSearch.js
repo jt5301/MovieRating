@@ -10,7 +10,8 @@ import Button from '@material-ui/core/Button';
 const useStyles = makeStyles((theme) => ({
   navContainer: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    backgroundColor:theme.palette.primary.main
   },
   root: {
     border: '1px solid #e2e2e1',
@@ -18,7 +19,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#fcfcfb',
   },
   name: {
-    marginTop: '18px'
+    marginTop: '18px',
+    color:'white'
   }
 
 }))

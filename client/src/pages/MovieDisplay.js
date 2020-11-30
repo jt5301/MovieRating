@@ -11,12 +11,15 @@ import MovieCard from '../components/MovieCard'
 import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
+  mainContainer:{
+    backgroundColor: theme.palette.primary.main,
+  },
   icon: {
     marginRight: theme.spacing(2),
   },
   heroContent: {
-    backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6),
+    backgroundColor:'white'
   },
   heroButtons: {
     marginTop: theme.spacing(4),
@@ -24,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   cardGrid: {
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8),
+
   },
   card: {
     height: '100%',
@@ -36,6 +40,10 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     flexGrow: 1,
   },
+  heroText:{
+    fontWeight:'bold',
+    textDecoration:'underline'
+  }
 }));
 
 
@@ -70,13 +78,13 @@ export default function MovieDisplay() {
       <CssBaseline />
       <AppBar position="relative">
       </AppBar>
-      <main>
+      <main className = {classes.mainContainer}>
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
-            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+            <Typography className = {classes.heroText} component="h1" variant="h2" align="center"  gutterBottom>
               Rate a Movie Below
             </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
+            <Typography variant="h5" align="center" paragraph>
               Leave your rating after searching for a movie. You can only vote once per movie!
             </Typography>
           </Container>

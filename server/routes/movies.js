@@ -22,7 +22,7 @@ router.post('/setMovieRating',async(req,res,next)=>{
     thumbsDown:0//update here
   })
   try {
-    const savedMovie = await movie.save()
+    await movie.save()
     res.status(200).json('test success')
   } catch (error) {
     console.error(error)
