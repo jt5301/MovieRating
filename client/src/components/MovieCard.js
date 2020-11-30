@@ -47,9 +47,10 @@ const MovieCard = (props) => {
   const [ratingButtons, setRatingButtons] = useState({thumbsUp:false,thumbsDown:false})
   let [thumbsUpCounter,setThumbsUp] = useState(0)
   let [thumbsDownCounter,setThumbsDown] = useState(0)
-  let movieInDB = false
+  const [movieInDB,setMovieInDB] = useState(false)
 
   useEffect(()=>{
+    console.log('hello')
     async function getMovieDetails(){
       try {
         let res = await axios.get(`/movies/getMoreInfo/${props.movie.imdbID}`)
@@ -62,10 +63,10 @@ const MovieCard = (props) => {
       try {
         let res = await axios.get(`/movies/getMovieFromDB/${props.movie.imdbID}`)
         if(res.data){
+          setMovieInDB(true)
           setThumbsUp(res.data.thumbsUp)
           setThumbsDown(res.data.thumbsDown)
         }
-
       } catch (error) {
         console.error(error)
       }
@@ -75,16 +76,15 @@ const MovieCard = (props) => {
   },[])
 
   async function handleRating (rating){
-    console.log(movieInDB)
     if(!movieInDB){
-      movieInDB = true
-      console.log(movieInDB)
       try {
         await axios.post(`/movies/setMovieRating/${props.movie.imdbID}`)
+        setMovieInDB(true)
       } catch (error) {
         console.error(error)
       }
     }
+
     if(rating === 'up'){
       if(ratingButtons.thumbsDown){
         return
@@ -112,6 +112,7 @@ const MovieCard = (props) => {
       }
     }
     try {
+      console.log(thumbsUpCounter,thumbsDownCounter)
       await axios.put(`/movies/changeMovieRating/${props.movie.imdbID}`,{thumbsUp:thumbsUpCounter,thumbsDown:thumbsDownCounter})
     } catch (error) {
       console.error(error)

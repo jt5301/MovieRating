@@ -46,18 +46,17 @@ router.post('/setMovieRating/:imdbID',async(req,res,next)=>{
 })
 
 router.put('/changeMovieRating/:imdbID',async(req,res,next)=>{
-  console.log(req.body)
   try {
-      const updateRating = {
-        $set: {
-           thumbsUp: req.body.thumbsDown,//
-           thumbsDown:req.body.thumbsDown
-        },
-     };
+    const updateRating = {
+      $set: {
+         thumbsUp: req.body.thumbsUp,
+         thumbsDown:req.body.thumbsDown//update here
+      },
+   };
     await RatedMovie.updateOne({
       movieId:req.params.imdbID//update here
     },updateRating)
-    res.status(200).json('success')
+    res.status(200).json('test success')
   } catch (error) {
     console.error(error)
   }
