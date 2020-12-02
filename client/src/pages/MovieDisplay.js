@@ -72,7 +72,14 @@ export default function MovieDisplay() {
   useEffect( ()=>{
     async function getMovies(){
       try {
-        const movies = await axios.get('/movies/search/twilight')
+        let localStorageTerm = localStorage.getItem('searchTerm')
+        let movies
+        if(localStorageTerm){
+          movies = await axios.get(`/movies/search/${localStorageTerm}`)
+        }
+        else{
+          movies = await axios.get('/movies/search/twilight')
+        }
         setMovies(movies.data)
       } catch (error) {
         console.log(error)

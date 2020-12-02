@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import AppBar from '@material-ui/core/AppBar';
 import { SearchContext } from '../hooks/SearchContext'
-import { makeStyles, } from '@material-ui/core/styles'
+import { makeStyles} from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
@@ -31,6 +31,7 @@ const NavbarSearch = () => {
   const [search, setSearch] = useState('')
   const submitSearch = (event) => {
     event.preventDefault()
+    localStorage.setItem('searchTerm',search)
     searchTerm.setMovieKeyword(search)
   }
   return (
