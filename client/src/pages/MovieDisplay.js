@@ -1,14 +1,12 @@
 import React, {useContext,useState,useEffect} from 'react';
-import {AppBar,CssBaseline,Grid,Typography,Container} from '@material-ui/core'
-// import AppBar from '@material-ui/core/AppBar';
-// import CssBaseline from '@material-ui/core/CssBaseline';
-// import Grid from '@material-ui/core/Grid';
-// import Typography from '@material-ui/core/Typography';
+import {AppBar,CssBaseline,Grid,Typography,Container, CircularProgress} from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
-// import Container from '@material-ui/core/Container';
 import { SearchContext } from '../hooks/SearchContext'
 import MovieCard from '../components/MovieCard'
 import axios from 'axios'
+import githubLogo from '../icons/githubLogo.svg'
+import linkedinLogo from '../icons/linkedinLogo.svg'
+
 
 const useStyles = makeStyles((theme) => ({
   mainContainer:{
@@ -43,12 +41,33 @@ const useStyles = makeStyles((theme) => ({
   heroText:{
     fontWeight:'bold',
     textDecoration:'underline'
+  },
+  loading:{
+    color:'white'
+  },
+  loadingContainer:{
+    display: 'flex',
+    justifyContent: 'center',
+    paddingTop: '10%',
+    paddingBottom:'10%'
+  },
+  footer: {
+    backgroundColor: theme.palette.background.paper,
+    padding: '2%',
+  },
+  iconContainer:{
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    marginLeft: '25%',
+    marginRight: '25%',
+    paddingTop: '1%',
   }
 }));
 
 
 export default function MovieDisplay() {
   const [movies,setMovies] = useState([])
+  const [loading,setLoading] = useState(false)
   let searchTerm = useContext(SearchContext)
   useEffect( ()=>{
     async function getMovies(){
@@ -71,6 +90,12 @@ export default function MovieDisplay() {
       }
     }
     getMovies()
+    setLoading(true)
+    setTimeout(()=>{
+      getMovies()
+      setLoading(false)
+    },2000)
+
   },[searchTerm.movieKeyword])
   const classes = useStyles();
   return (
@@ -89,7 +114,11 @@ export default function MovieDisplay() {
             </Typography>
           </Container>
         </div>
-
+        {loading ?
+          <div className = {classes.loadingContainer}>
+        <CircularProgress className = {classes.loading} />
+        </div>
+         :
         <Container className={classes.cardGrid} maxWidth="lg">
           <Grid container spacing={4}>
             {movies.map((movie) => (
@@ -97,17 +126,28 @@ export default function MovieDisplay() {
             ))}
           </Grid>
         </Container>
+          }
       </main>
       {/* Footer */}
       <footer className={classes.footer}>
         <Typography variant="h6" align="center" gutterBottom>
-          Footer
+          Thank you for checking out this app!
         </Typography>
         <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-          Something here to give the footer a purpose!
+          Here are some links to me and my work:
         </Typography>
+        <div className  = {classes.iconContainer}>
+          <a class='link' href='https://www.linkedin.com/in/johnt5301'>
+            <img src={linkedinLogo} alt="github" height="30px" width="30px" />
+          </a>
+          <a class='link' href='https://github.com/jt5301'>
+            <img src={githubLogo} alt="github" height="30px" width="30px" />
+          </a>
+        </div>
+
       </footer>
       {/* End footer */}
     </React.Fragment>
   );
 }
+

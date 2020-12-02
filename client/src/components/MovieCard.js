@@ -50,7 +50,6 @@ const MovieCard = (props) => {
   const [movieInDB,setMovieInDB] = useState(false)
 
   useEffect(()=>{
-    console.log('hello')
     async function getMovieDetails(){
       try {
         let res = await axios.get(`/movies/getMoreInfo/${props.movie.imdbID}`)
@@ -112,7 +111,6 @@ const MovieCard = (props) => {
       }
     }
     try {
-      console.log(thumbsUpCounter,thumbsDownCounter)
       await axios.put(`/movies/changeMovieRating/${props.movie.imdbID}`,{thumbsUp:thumbsUpCounter,thumbsDown:thumbsDownCounter})
     } catch (error) {
       console.error(error)

@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme)=>({
     fontSize:'small',
     marginLeft:'5%'
   },
+  description:{
+    fontWeight:'bold',
+    fontSize:'small',
+  },
   extraInfo:{
     marginBottom:'3%',
     display:'flex',
@@ -82,6 +86,7 @@ export const MoreInfoDialog = (props) => {
 
           </DialogContent>
           <DialogContent>
+          <div className = {classes.description}>Description:</div>
           <DialogContentText id="alert-dialog-description">
               {props.detailedInfo.Plot}
             </DialogContentText>
