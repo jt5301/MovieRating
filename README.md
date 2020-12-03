@@ -6,9 +6,10 @@ Hello! This is my submission for YearOne's application process. The app is made 
 
 Download / clone the project. You'll need to create an env file storing two variables. Place your env file in the server folder:
 
-One is a key to OMDB's api. You can find information on obtaining one [here] (http://www.omdbapi.com/).
+One is a key to OMDB's api. You can find information on obtaining one [here](http://www.omdbapi.com/).
 
-The other is a connection string for a MongoDB cluster. I found their docs pretty easy to follow for setting up in Node [here] (https://docs.atlas.mongodb.com/getting-started/)
+The other is a connection string for a MongoDB cluster. I found their docs pretty easy to follow for setting up in Node
+[here](https://docs.atlas.mongodb.com/getting-started/)
 
 The variable names are:
 
