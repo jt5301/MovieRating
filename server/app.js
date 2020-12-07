@@ -7,9 +7,25 @@ const mongoose = require('mongoose')
 const movieRouter = require("./routes/movies");
 const bodyParser = require('body-parser')
 const { json, urlencoded } = express;
+const {graphqlHTTP} = require('express-graphql')
+const{
+  GraphQLSchema,
+  GraphQLObjectType,
+  GraphQLString
+} = require('graphql')
 
 var app = express();
-
+const schema = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name:'helloworld',
+    fields:()=>({
+      message:{
+        type:GraphQLString,
+        resolve:()=>'helloWorld resolve'
+      }
+    })
+  })
+})
 app.use(logger("dev"));
 app.use(json());
 app.use(urlencoded({ extended: false }));
@@ -18,7 +34,10 @@ app.use(express.static(join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use("/movies", movieRouter);
-
+app.use('/graphql',graphqlHTTP({
+  graphiql:true,
+  schema:schema
+}))
 
 app.use(express.static(__dirname + '/client/build/'));
 
