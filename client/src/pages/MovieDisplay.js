@@ -6,6 +6,7 @@ import MovieCard from '../components/MovieCard'
 import axios from 'axios'
 import githubLogo from '../icons/githubLogo.svg'
 import linkedinLogo from '../icons/linkedinLogo.svg'
+import { gql, useQuery } from '@apollo/client';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -64,10 +65,18 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const MOVIES_QUERY = gql`
+  query movies($searchTerm:String!) {
+    Title
+    Plot
+  }
+`
 
 export default function MovieDisplay() {
   const [movies,setMovies] = useState([])
-  const [loading,setLoading] = useState(false)
+  const [loadSpinner,setLoadspinner] = useState(false)
+  const {loading,error,data} = useQuery(MOVIES_QUERY)
+
   let searchTerm = useContext(SearchContext)
   useEffect( ()=>{
     async function getMovies(){
@@ -97,10 +106,10 @@ export default function MovieDisplay() {
       }
     }
     getMovies()
-    setLoading(true)
+    setLoadspinner(true)
     setTimeout(()=>{
       getMovies()
-      setLoading(false)
+      setLoadspinner(false)
     },2000)
 
   },[searchTerm.movieKeyword])
@@ -121,7 +130,7 @@ export default function MovieDisplay() {
             </Typography>
           </Container>
         </div>
-        {loading ?
+        {loadSpinner ?
           <div className = {classes.loadingContainer}>
         <CircularProgress className = {classes.loading} />
         </div>

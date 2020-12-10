@@ -29,13 +29,13 @@ const movieType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields:{
-    movies:{
+    movies:{//search for movies matching keywords
       type:new GraphQLList(movieType),
       args:{
         searchterm:{type:GraphQLString}
       },
       resolve: async (parent,args)=>{
-        const res = await axios.get(omdbRootUrl+`s=${args}&type=movie`)
+        const res = await axios.get(omdbRootUrl+`s=${args.searchterm}&type=movie`)
         let movies = res.data.Search
         for(let movie of movies){
           const res = await axios.get(omdbRootUrl+`i=${movie.imdbID}&plot=full`)
@@ -44,9 +44,18 @@ const RootQuery = new GraphQLObjectType({
           movie.Actors = extraInfo.Actors
           movie.Director = extraInfo.Director
           movie.Writer = extraInfo.Writer
-          movie.Year = extraInfo.Year
         }
         return movies
+      }
+    },
+    movie:{//search for single movie. may not use for now
+      type:movieType,
+      args:{
+        imdbID:{type:GraphQLString}
+      },
+      resolve:async(parent,args)=>{
+        const res = await axios.get(omdbRootUrl+`i=${args.imdbID}&plot=full`)
+        return res.data
       }
     }
   }
