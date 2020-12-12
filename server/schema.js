@@ -4,7 +4,6 @@ const{
   GraphQLString,
   GraphQLList,
   GraphQLInt,
-  GraphQLNonNull,
 } = require('graphql')
 const axios = require('axios')
 const omdbRootUrl = `http://www.omdbapi.com/?apikey=${process.env.omdbKey}&`

@@ -17,7 +17,7 @@ mongodbConnect= "your connection string here"
 
 omdbKey= "your omdb key here"
 
-Once you added the env variables, open up two terminals. Use one to cd into the server folder, npm install and start it. Use the other to cd into the client folder, npm install and start that. You should be able to see the frontend at localhost 3000 afterwards.
+Once you added the env variables, run npm install in both server and client folders to download all neccesary dependencies. You can use npm run dev in the top level of the project to run both server and client.
 
 ## The App
 
