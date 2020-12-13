@@ -42,35 +42,24 @@ const useStyles = makeStyles((theme)=>({
 ))
 
 const MovieCard = (props) => {
-  const [movieDetails,setMovieDetails] = useState({})
   const [open,setOpen] = useState(false)
   const [ratingButtons, setRatingButtons] = useState({thumbsUp:false,thumbsDown:false})
-  let [thumbsUpCounter,setThumbsUp] = useState(0)
-  let [thumbsDownCounter,setThumbsDown] = useState(0)
+  let [thumbsUpCounter,setThumbsUp] = useState(props.movie.ThumbsUp||0)
+  let [thumbsDownCounter,setThumbsDown] = useState(props.movie.ThumbsDown|| 0)
   const [movieInDB,setMovieInDB] = useState(false)
 
   useEffect(()=>{
-    async function getMovieDetails(){
-      try {
-        let res = await axios.get(`/movies/getMoreInfo/${props.movie.imdbID}`)
-        setMovieDetails(res.data)
-      } catch (error) {
-        console.error(error)
-      }
-    }
     async function getMovieFromDB(){
       try {
         let res = await axios.get(`/movies/getMovieFromDB/${props.movie.imdbID}`)
         if(res.data){
           setMovieInDB(true)
-          setThumbsUp(res.data.thumbsUp)
-          setThumbsDown(res.data.thumbsDown)
         }
       } catch (error) {
         console.error(error)
       }
     }
-    getMovieDetails()
+    // getMovieDetails()
     getMovieFromDB()
   },[])
 
@@ -156,7 +145,7 @@ const MovieCard = (props) => {
                     <Button className = {classes.cardButtons} size="small" color="primary" onClick = {handleOpenDialog}>
                       More Info
                     </Button>
-                    <MoreInfoDialog basicInfo = {props.movie} detailedInfo = {movieDetails} open={open} handleClose={handleClose} />
+                    <MoreInfoDialog details = {props.movie} open={open} handleClose={handleClose} />
                     <Button onClick = {()=>{handleRating('down')}} className = {classes.cardButtons} size="small" color="primary">
                       <ThumbDownIcon/>
                     </Button>

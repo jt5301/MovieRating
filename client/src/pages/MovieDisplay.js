@@ -3,10 +3,10 @@ import {AppBar,CssBaseline,Grid,Typography,Container, CircularProgress} from '@m
 import { makeStyles } from '@material-ui/core/styles';
 import { SearchContext } from '../hooks/SearchContext'
 import MovieCard from '../components/MovieCard'
-import axios from 'axios'
 import githubLogo from '../icons/githubLogo.svg'
 import linkedinLogo from '../icons/linkedinLogo.svg'
-import { gql, useQuery } from '@apollo/client';
+import { gql, useQuery} from '@apollo/client';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -65,54 +65,27 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const MOVIES_QUERY = gql`
-  query movies($searchTerm:String!) {
-    Title
-    Plot
+const GETMOVIES = gql`
+  query moviesQuery($searchterm: String!) {
+    movies(searchterm:$searchterm) {
+      Title
+      Year
+      imdbID
+      Poster
+      Plot
+      Director
+      Actors
+      Writer
+      ThumbsUp
+      ThumbsDown
   }
-`
+}`
 
 export default function MovieDisplay() {
-  const [movies,setMovies] = useState([])
-  const [loadSpinner,setLoadspinner] = useState(false)
-  const {loading,error,data} = useQuery(MOVIES_QUERY)
-
   let searchTerm = useContext(SearchContext)
-  useEffect( ()=>{
-    async function getMovies(){
-      try {
-        let localStorageTerm = localStorage.getItem('searchTerm')
-        let movies
-        if(localStorageTerm){
-          movies = await axios.get(`/movies/search/${localStorageTerm}`)
-        }
-        else{
-          movies = await axios.get('/movies/search/twilight')
-        }
-        setMovies(movies.data)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    getMovies()
-  },[])
-  useEffect(()=>{
-    async function getMovies(){
-      try {
-        const movies = await axios.get(`/movies/search/${searchTerm.movieKeyword}`)
-        setMovies(movies.data)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    getMovies()
-    setLoadspinner(true)
-    setTimeout(()=>{
-      getMovies()
-      setLoadspinner(false)
-    },2000)
-
-  },[searchTerm.movieKeyword])
+  const { loading, error, data } = useQuery(GETMOVIES,{
+    variables:{searchterm:searchTerm.movieKeyword || 'twilight'}
+  })
   const classes = useStyles();
   return (
     <React.Fragment>
@@ -130,19 +103,35 @@ export default function MovieDisplay() {
             </Typography>
           </Container>
         </div>
-        {loadSpinner ?
+        {/* Loading Screen */}
+        {loading ?
           <div className = {classes.loadingContainer}>
         <CircularProgress className = {classes.loading} />
         </div>
-         :
+        :
+        <></>
+        }
+        {/* Data comes through*/}
         <Container className={classes.cardGrid} maxWidth="lg">
-          <Grid container spacing={4}>
-            {movies.map((movie) => (
-              <MovieCard key = {movie.imdbID} movie = {movie}/>
-            ))}
-          </Grid>
+          {(data) ?
+            <Grid container spacing={4}>
+              {data.movies.map((movie) => (
+                <MovieCard key = {movie.imdbID} movie = {movie}/>
+              ))}
+            </Grid>
+            :
+            <div>
+            {/* nested ternary, need to refactor. hides message if it's loading, as opposed to data not found*/}
+            {(loading === false) ?
+              <div className = {classes.errorMessage}>No movies found. Try another search</div>
+            :
+             <></>
+             }
+            </div>
+        }
         </Container>
-          }
+
+
       </main>
       {/* Footer */}
       <footer className={classes.footer}>
@@ -166,4 +155,3 @@ export default function MovieDisplay() {
     </React.Fragment>
   );
 }
-
