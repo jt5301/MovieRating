@@ -7,7 +7,6 @@ const RatedMovie = require('../models/rated')
 router.get("/search/:keywords", async (req, res, next) => {
   const movie = await axios.get(omdbRootUrl+`s=${req.params.keywords}&type=movie`)
   res.status(200).json(movie.data.Search);
-
 });
 
 router.get('/getMoreInfo/:imdbID',async(req,res,next)=>{

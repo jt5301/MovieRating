@@ -7,8 +7,6 @@ import githubLogo from '../icons/githubLogo.svg'
 import linkedinLogo from '../icons/linkedinLogo.svg'
 import { gql, useQuery} from '@apollo/client';
 
-
-
 const useStyles = makeStyles((theme) => ({
   mainContainer:{
     backgroundColor: theme.palette.primary.main,
@@ -83,9 +81,10 @@ const GETMOVIES = gql`
 
 export default function MovieDisplay() {
   let searchTerm = useContext(SearchContext)
-  const { loading, error, data } = useQuery(GETMOVIES,{
+  const { loading, data } = useQuery(GETMOVIES,{
     variables:{searchterm:searchTerm.movieKeyword || 'twilight'}
   })
+  console.log(data)
   const classes = useStyles();
   return (
     <React.Fragment>
