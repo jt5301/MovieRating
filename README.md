@@ -4,7 +4,7 @@ Hello! This is my submission for YearOne's application process. The app is made 
 
 
 ## Edit:
-In the process of using GraphQL! The frontend is currently grabbing all neccesary information to display the movies correctly. Essentially this has replaced all the GET routes that the frontend needed. Currently in the process of writing mutations for interacting with the MongoDB database.
+In the process of using GraphQL! The frontend is currently using Apollo to communicate with my GraphQL server, grabbing all neccesary information to display the movies and relevant DB info correctly. Essentially this has replaced all the GET routes that the frontend needed. Currently in the process of writing mutations for writing to the MongoDB database.
 
 ## Getting started
 
