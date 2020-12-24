@@ -53,7 +53,6 @@ const RootMutation = new GraphQLObjectType({
         } catch (error) {
           console.error(error)
         }
-        console.log('hello')
         //tt2294629
       }
     },
