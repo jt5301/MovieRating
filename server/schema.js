@@ -4,6 +4,7 @@ const{
   GraphQLString,
   GraphQLList,
   GraphQLInt,
+  GraphQLNonNull
 } = require('graphql')
 const axios = require('axios')
 const omdbRootUrl = `http://www.omdbapi.com/?apikey=${process.env.omdbKey}&`
@@ -27,9 +28,67 @@ const movieType = new GraphQLObjectType({
   })
 })
 
+//Root Mutation
+const RootMutation = new GraphQLObjectType({
+  name:'RootMutationType',
+  description:'root mutation',
+  fields:{//may need anon function
+    addMovie:{
+      type:movieType,
+      description:'add movie to db',
+      args:{
+        imdbID:{type:GraphQLNonNull(GraphQLString)},
+        ThumbsUp:{type:GraphQLNonNull(GraphQLInt)},
+        ThumbsDown:{type:GraphQLNonNull(GraphQLInt)}
+      },
+      resolve:async(parent,args)=>{
+        const movie = new RatedMovie({
+          movieId:args.imdbID,//update here
+          thumbsUp:args.ThumbsUp,//update here
+          thumbsDown:args.ThumbsDown//update here
+        })
+        try {
+          await movie.save()
+          return movie
+        } catch (error) {
+          console.error(error)
+        }
+        console.log('hello')
+        //tt2294629
+      }
+    },
+    modifyRating:{
+      type:movieType,
+      description:'modifies thumbs up',
+      args:{
+        imdbID:{type:GraphQLNonNull(GraphQLString)},
+        ThumbsUp:{type:GraphQLNonNull(GraphQLInt)},
+        ThumbsDown:{type:GraphQLNonNull(GraphQLInt)}
+      },
+      resolve: async (parent,args)=>{
+        try {
+          const updateRating = {
+            $set:{
+              thumbsUp:args.ThumbsUp,
+              thumbsDown:args.ThumbsDown
+            }
+          }
+          await RatedMovie.updateOne({
+            movieId:args.imdbID
+          },updateRating)
+          return 'success'
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    }
+  }
+})
+
 //Root Query
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
+  description:'root query',
   fields:{
     movies:{//search for movies matching keywords
       type:new GraphQLList(movieType),
@@ -71,5 +130,6 @@ const RootQuery = new GraphQLObjectType({
 })
 
 module.exports = new GraphQLSchema({
-  query:RootQuery
+  query:RootQuery,
+  mutation:RootMutation
 })
