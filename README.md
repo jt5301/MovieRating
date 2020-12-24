@@ -1,6 +1,10 @@
 # Year One Movie Rating
 
-Hello! This is my submission for YearOne's application process. The app is made with React, Material-UI, Node, Express and MongoDB. I'd like to incorporate GraphQL into the server eventually, just to see if I can lessen the amount of calls I'll have to make to the OMDB api (and also to learn how to use GraphQL).
+Hello! This is my submission for YearOne's application process. The app is made with React, Material-UI, Node, Express and MongoDB. I'd like to incorporate GraphQL into the server eventually, just to see if I can simplify the calls I get from the server somehow (and also to learn how to use GraphQL).
+
+
+## Edit:
+In the process of using GraphQL! The frontend is currently using Apollo to communicate with my GraphQL server, grabbing all neccesary information to display the movies and relevant DB info correctly. Essentially this has replaced all the GET routes that the frontend needed. Currently in the process of writing mutations for writing to the MongoDB database.
 
 ## Getting started
 
