@@ -1,6 +1,6 @@
 # Year One Movie Rating
 
-Hello! This is my submission for YearOne's application process. The app is made with React, Material-UI, Node, Express and MongoDB. I'd like to incorporate GraphQL into the server eventually, just to see if I can simplify the calls I get from the server somehow (and also to learn how to use GraphQL).
+Hey! This is my submission for YearOne's application process. The app is made with React, Material-UI, Node, Express and MongoDB. I'd like to incorporate GraphQL into the server eventually, just to see if I can simplify the calls I get from the server (and also to learn how to use GraphQL).
 
 
 ## Edit:

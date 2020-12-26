@@ -4,11 +4,11 @@ const ratedSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  thumbsUp:{
+  ThumbsUp:{
     type:Number,
     required:true
   },
-  thumbsDown:{
+  ThumbsDown:{
     type:Number,
     required:true
   }

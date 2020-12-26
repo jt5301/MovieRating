@@ -44,8 +44,8 @@ const RootMutation = new GraphQLObjectType({
       resolve:async(parent,args)=>{
         const movie = new RatedMovie({
           movieId:args.imdbID,//update here
-          thumbsUp:args.ThumbsUp,//update here
-          thumbsDown:args.ThumbsDown//update here
+          ThumbsUp:args.ThumbsUp,//update here
+          ThumbsDown:args.ThumbsDown//update here
         })
         try {
           await movie.save()
@@ -53,7 +53,6 @@ const RootMutation = new GraphQLObjectType({
         } catch (error) {
           console.error(error)
         }
-        //tt2294629
       }
     },
     modifyRating:{
@@ -72,10 +71,10 @@ const RootMutation = new GraphQLObjectType({
               thumbsDown:args.ThumbsDown
             }
           }
-          await RatedMovie.updateOne({
+          let test = await RatedMovie.findOneAndUpdate({
             movieId:args.imdbID
           },updateRating)
-          return 'success'
+          return test
         } catch (error) {
           console.error(error)
         }
