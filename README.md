@@ -1,11 +1,14 @@
 # Year One Movie Rating
 
-Hey! This is my submission for YearOne's application process. The app is made with React, Material-UI, Node, Express and MongoDB. I'd like to incorporate GraphQL into the server eventually, just to see if I can simplify the calls I get from the server (and also to learn how to use GraphQL).
+Hey! This is my submission for YearOne's application process. The app ~is~ was made with React, Material-UI, Node, Express and MongoDB. I'd like to incorporate GraphQL into the server eventually, just to see if I can simplify the calls I get from the server (and also to learn how to use GraphQL).
 
 
 ## Edit:
-In the process of using GraphQL! The frontend is currently using Apollo to communicate with my GraphQL server, grabbing all neccesary information to display the movies and relevant DB info correctly. Essentially this has replaced all the GET routes that the frontend needed. Currently in the process of writing mutations for writing to the MongoDB database.
+In the process of using GraphQL. The frontend is currently using Apollo to communicate with my GraphQL server, grabbing all neccesary information to display the movies and relevant DB info correctly. Essentially this has replaced all the GET routes that the frontend needed. Currently in the process of writing mutations for writing to the MongoDB database.
 
+## Edit 2:
+Everything is now moved successfully onto a GraphQL server. I'm also using Apollo Client on the frontend to communicate with the server.
+Deployed Version is here! https://jt-ratethismovie.herokuapp.com/
 ## Getting started
 
 Download / clone the project. You'll need to create an env file storing two variables. Place your env file in the server folder:
