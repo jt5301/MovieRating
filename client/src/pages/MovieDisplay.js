@@ -66,9 +66,10 @@ const useStyles = makeStyles((theme) => ({
 const GETMOVIES = gql`
   query moviesQuery($searchterm: String!) {
     movies(searchterm:$searchterm) {
+      id
+      mdbCheck
       Title
       Year
-      imdbID
       Poster
       Plot
       Director
@@ -84,6 +85,7 @@ export default function MovieDisplay() {
   const { loading, data } = useQuery(GETMOVIES,{
     variables:{searchterm:searchTerm.movieKeyword || 'twilight'}
   })
+  console.log(data)
   const classes = useStyles();
   return (
     <React.Fragment>
@@ -140,10 +142,10 @@ export default function MovieDisplay() {
           Here are some links to me and my work:
         </Typography>
         <div className  = {classes.iconContainer}>
-          <a class='link' href='https://www.linkedin.com/in/johnt5301'>
+          <a className='link' href='https://www.linkedin.com/in/johnt5301'>
             <img src={linkedinLogo} alt="github" height="30px" width="30px" />
           </a>
-          <a class='link' href='https://github.com/jt5301'>
+          <a className='link' href='https://github.com/jt5301'>
             <img src={githubLogo} alt="github" height="30px" width="30px" />
           </a>
         </div>

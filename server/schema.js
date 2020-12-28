@@ -4,7 +4,8 @@ const{
   GraphQLString,
   GraphQLList,
   GraphQLInt,
-  GraphQLNonNull
+  GraphQLNonNull,
+  GraphQLBoolean
 } = require('graphql')
 const axios = require('axios')
 const omdbRootUrl = `http://www.omdbapi.com/?apikey=${process.env.omdbKey}&`
@@ -14,6 +15,8 @@ const movieType = new GraphQLObjectType({
   name:'movie',
   description: 'movie',
   fields:()=>({
+    id:{type:GraphQLString},
+    mdbCheck:{type:GraphQLBoolean},
     Title:{type:GraphQLString},
     Year:{type:GraphQLString},
     imdbID:{type:GraphQLString},
@@ -32,23 +35,24 @@ const movieType = new GraphQLObjectType({
 const RootMutation = new GraphQLObjectType({
   name:'RootMutationType',
   description:'root mutation',
-  fields:{//may need anon function
+  fields:{//may need anon function?
     addMovie:{
       type:movieType,
       description:'add movie to db',
       args:{
-        imdbID:{type:GraphQLNonNull(GraphQLString)},
-        ThumbsUp:{type:GraphQLNonNull(GraphQLInt)},
-        ThumbsDown:{type:GraphQLNonNull(GraphQLInt)}
+        id:{type:GraphQLNonNull(GraphQLString)},
+        mdbCheck:{type:GraphQLNonNull(GraphQLBoolean)},
       },
       resolve:async(parent,args)=>{
         const movie = new RatedMovie({
-          movieId:args.imdbID,//update here
-          ThumbsUp:args.ThumbsUp,//update here
-          ThumbsDown:args.ThumbsDown//update here
+          id:args.id,
+          mdbCheck:true,
+          ThumbsUp:0,
+          ThumbsDown:0,
         })
         try {
           await movie.save()
+          console.log(movie)
           return movie
         } catch (error) {
           console.error(error)
@@ -57,9 +61,9 @@ const RootMutation = new GraphQLObjectType({
     },
     modifyRating:{
       type:movieType,
-      description:'modifies thumbs up',
+      description:'modifies thumbs up / down',
       args:{
-        imdbID:{type:GraphQLNonNull(GraphQLString)},
+        id:{type:GraphQLNonNull(GraphQLString)},
         ThumbsUp:{type:GraphQLNonNull(GraphQLInt)},
         ThumbsDown:{type:GraphQLNonNull(GraphQLInt)}
       },
@@ -67,14 +71,15 @@ const RootMutation = new GraphQLObjectType({
         try {
           const updateRating = {
             $set:{
-              thumbsUp:args.ThumbsUp,
-              thumbsDown:args.ThumbsDown
+              ThumbsUp:args.ThumbsUp,
+              ThumbsDown:args.ThumbsDown,
+              mdbCheck:true
             }
           }
-          let test = await RatedMovie.findOneAndUpdate({
-            movieId:args.imdbID
-          },updateRating)
-          return test
+          await RatedMovie.findOneAndUpdate({
+            id:args.id
+          },updateRating,{new: true})
+          return args
         } catch (error) {
           console.error(error)
         }
@@ -97,15 +102,17 @@ const RootQuery = new GraphQLObjectType({
         const res = await axios.get(omdbRootUrl+`s=${args.searchterm}&type=movie`)
         let movies = res.data.Search
         for(let movie of movies){
-          const res = await axios.get(omdbRootUrl+`i=${movie.imdbID}&plot=full`)
           const rating = await RatedMovie.findOne({
-            movieId:movie.imdbID
+            id:movie.imdbID,
           })
           if(rating){
-            movie.ThumbsUp = rating.thumbsUp
-            movie.ThumbsDown = rating.thumbsDown
+            movie.ThumbsUp = rating.ThumbsUp
+            movie.ThumbsDown = rating.ThumbsDown
+            movie.mdbCheck = rating.mdbCheck
           }
+          const res = await axios.get(omdbRootUrl+`i=${movie.imdbID}&plot=full`)
           const extraInfo = res.data
+          movie.id = movie.imdbID
           movie.Plot = extraInfo.Plot
           movie.Actors = extraInfo.Actors
           movie.Director = extraInfo.Director

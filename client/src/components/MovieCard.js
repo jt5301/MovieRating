@@ -3,7 +3,7 @@ import { Button,Grid,Card,CardActions,CardActionArea,CardContent,CardMedia,Typog
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import {MoreInfoDialog} from './MoreInfoDialog'
-import axios from 'axios'
+import {gql,useMutation, useApolloClient} from '@apollo/client'
 
 const useStyles = makeStyles((theme)=>({
   cardCounter:{
@@ -41,38 +41,50 @@ const useStyles = makeStyles((theme)=>({
 }
 ))
 
+const ADD_MOVIE = gql`
+  mutation addMovie($id:String!,$mdbCheck:Boolean!){
+    addMovie(id:$id,mdbCheck:$mdbCheck){
+      id
+      mdbCheck
+    }
+  }
+`
+
+const MODIFY_RATING = gql`
+  mutation modifyRating($id:String!,$ThumbsUp:Int!,$ThumbsDown:Int!){
+    modifyRating(id:$id,ThumbsUp:$ThumbsUp,ThumbsDown:$ThumbsDown){
+      id
+      ThumbsUp
+      ThumbsDown
+    }
+  }
+`
+
 const MovieCard = (props) => {
   const [open,setOpen] = useState(false)
   const [ratingButtons, setRatingButtons] = useState({thumbsUp:false,thumbsDown:false})
-  let [thumbsUpCounter,setThumbsUp] = useState(props.movie.ThumbsUp||0)
-  let [thumbsDownCounter,setThumbsDown] = useState(props.movie.ThumbsDown|| 0)
-  const [movieInDB,setMovieInDB] = useState(false)
+  let [thumbsUpCounter,setThumbsUp] = useState(0)
+  let [thumbsDownCounter,setThumbsDown] = useState(0)
+  const [addMovie] = useMutation(ADD_MOVIE)
+  const [modifyRating]=useMutation(MODIFY_RATING)
 
   useEffect(()=>{
-    async function getMovieFromDB(){
-      try {
-        let res = await axios.get(`/movies/getMovieFromDB/${props.movie.imdbID}`)
-        if(res.data){
-          setMovieInDB(true)
-        }
-      } catch (error) {
-        console.error(error)
-      }
+    if(props.movie.mdbCheck){
+      setThumbsUp(props.movie.ThumbsUp)
+      setThumbsDown(props.movie.ThumbsDown)
     }
-    // getMovieDetails()
-    getMovieFromDB()
-  },[])
-
-  async function handleRating (rating){
-    if(!movieInDB){
-      try {
-        await axios.post(`/movies/setMovieRating/${props.movie.imdbID}`)
-        setMovieInDB(true)
-      } catch (error) {
-        console.error(error)
-      }
+    else{
+      setThumbsUp(0)
+      setThumbsUp(0)
     }
-
+  },[props.movie])
+  function handleRating (rating){
+    if(!props.movie.mdbCheck){
+      addMovie({variables:{
+        id:props.movie.id,
+        mdbCheck:true
+      }})
+    }
     if(rating === 'up'){
       if(ratingButtons.thumbsDown){
         return
@@ -99,11 +111,11 @@ const MovieCard = (props) => {
         setRatingButtons({...ratingButtons, thumbsDown:false})
       }
     }
-    try {
-      await axios.put(`/movies/changeMovieRating/${props.movie.imdbID}`,{thumbsUp:thumbsUpCounter,thumbsDown:thumbsDownCounter})
-    } catch (error) {
-      console.error(error)
-    }
+    modifyRating({variables:{
+      id:props.movie.id,
+      ThumbsUp:thumbsUpCounter,
+      ThumbsDown:thumbsDownCounter
+    }})
   }
 
   function handleOpenDialog(){
@@ -156,3 +168,20 @@ const MovieCard = (props) => {
 }
 
 export default MovieCard
+
+
+
+  // useEffect(()=>{
+  //   async function getMovieFromDB(){
+  //     try {
+  //       let res = await axios.get(`/movies/getMovieFromDB/${props.movie.imdbID}`)
+  //       if(res.data){
+  //         setMovieInDB(true)
+  //       }
+  //     } catch (error) {
+  //       console.error(error)
+  //     }
+  //   }
+  //   // getMovieDetails()
+  //   getMovieFromDB()
+  // },[])

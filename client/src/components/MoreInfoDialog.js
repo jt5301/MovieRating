@@ -93,7 +93,7 @@ export const MoreInfoDialog = (props) => {
           </DialogContent>
           <DialogActions className = {classes.dialogButtons}>
             <Button autoFocus onClick={props.onClose}>
-            <a className = {classes.imdbLink} href = {`https://www.imdb.com/title/${props.details.imdbID}/`}>IMDB Page</a>
+            <a className = {classes.imdbLink} href = {`https://www.imdb.com/title/${props.details.id}/`}>IMDB Page</a>
             </Button>
             <Button onClick={onClose} color="secondary" autoFocus>
               Close

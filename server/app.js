@@ -36,7 +36,10 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-mongoose.connect(process.env.mongodbConnect, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
+mongoose.connect(process.env.mongodbConnect, {
+   useNewUrlParser: true,
+   useUnifiedTopology: true,
+   useFindAndModify: false }, () => {
   console.log('connected to mongodb')
 })
 

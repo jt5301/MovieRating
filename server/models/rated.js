@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const ratedSchema = mongoose.Schema({
-  movieId: {
+  id: {
     type: String,
     required: true
   },
@@ -11,7 +11,10 @@ const ratedSchema = mongoose.Schema({
   ThumbsDown:{
     type:Number,
     required:true
-  }
+  },
+  mdbCheck:{
+    type:Boolean
+  },
 })
 
 module.exports = mongoose.model('Movies', ratedSchema)
