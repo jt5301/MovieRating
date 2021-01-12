@@ -38,6 +38,6 @@ The third section is the more info overlay. You can find more details about the 
 
 ![movierating demo](http://g.recordit.co/hA9ZqISh6D.gif)
 
-I also added a loading animation to give the app some time to grab the numbers for the thumbs up and thumbs down, so that the user doesn't see the counters go from 0 to whatever number exists for the movie in the database.
+I also added a loading animation to give the app some time to grab the numbers for the thumbs up and thumbs down, so that the user doesn't see the counters go from 0 to whatever number exists for the movie in the database. This loading animation now works when Apollo is fetching data. Since Apollo caches, if you enter a term that was previously searched for, Apollo just gets from the cache (which is updated if there are any changes made), making loading much faster.
 
 Thank you for checking this out!
