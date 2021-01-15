@@ -2,13 +2,16 @@
 
 Hey! This app lets you rate movies. The app ~is~ was originally made with React, Material-UI, Node, Express and MongoDB. I'd like to incorporate GraphQL into the server eventually, just to see if I can simplify the calls I get from the server (and also to learn how to use GraphQL).
 
-
-## Edit:
-In the process of using GraphQL. The frontend is currently using Apollo to communicate with my GraphQL server, grabbing all neccesary information to display the movies and relevant DB info correctly. Essentially this has replaced all the GET routes that the frontend needed. Currently in the process of writing mutations for writing to the MongoDB database.
+## Edit 3:
+I'd like to submit this project for the Shoppies internship. The source project was written a few weeks ago as a practice application for learning GraphQL, but the main idea was similar enough to the Shopify app that I wanted to use it and add the required features to it. Please feel free to take a look at the previous edits to see how this project has evolved!
 
 ## Edit 2:
 Everything is now moved successfully onto a GraphQL server located on a single endpoint (using express). I'm also using Apollo Client on the frontend to communicate with the server. Funtionality wise though, everything is more or less the same as when it was made using a MERN stack.
 Deployed Version is here! https://jt-ratethismovie.herokuapp.com/
+
+## Edit:
+In the process of using GraphQL. The frontend is currently using Apollo to communicate with my GraphQL server, grabbing all neccesary information to display the movies and relevant DB info correctly. Essentially this has replaced all the GET routes that the frontend needed. Currently in the process of writing mutations for writing to the MongoDB database.
+
 ## Getting started
 
 Download / clone the project. You'll need to create an env file storing two variables. Place your env file in the server folder:
