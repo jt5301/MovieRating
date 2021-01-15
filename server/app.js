@@ -1,6 +1,6 @@
 const createError = require("http-errors");
 const express = require("express");
-const { join } = require("path");
+const { join, path } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require('mongoose')
@@ -10,6 +10,7 @@ const { json, urlencoded } = express;
 const {graphqlHTTP} = require('express-graphql')
 const schema = require('./schema')
 const cors = require('cors')
+require('dotenv').config()
 
 var app = express();
 

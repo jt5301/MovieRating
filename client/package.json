@@ -8,6 +8,7 @@
     "@material-ui/icons": "^4.9.1",
     "axios": "^0.21.0",
     "graphql": "^15.4.0",
+    "is-word": "^1.0.4",
     "react": "^17.0.1",
     "react-apollo": "^3.1.5",
     "react-dom": "^17.0.1",
@@ -16,7 +17,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && mv build ../server/public",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

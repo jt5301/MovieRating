@@ -1,9 +1,13 @@
-import React, {useState, useEffect } from 'react'
+import React, {useState, useEffect, useContext } from 'react'
 import { Button,Grid,Card,CardActions,CardActionArea,CardContent,CardMedia,Typography,makeStyles} from '@material-ui/core';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import {MoreInfoDialog} from './MoreInfoDialog'
-import {gql,useMutation, useApolloClient} from '@apollo/client'
+import {gql,useMutation} from '@apollo/client'
+import {NomineeContext} from '../hooks/NomineeContext'
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles((theme)=>({
   cardCounter:{
@@ -19,6 +23,8 @@ const useStyles = makeStyles((theme)=>({
     display: 'flex',
     flexDirection: 'column',
     minHeight: 275,
+    maxWidth:270,
+    backgroundColor:theme.palette.secondary.pale
   },
   cardMedia: {
     paddingTop: '100%', // 16:9
@@ -61,13 +67,48 @@ const MODIFY_RATING = gql`
 `
 
 const MovieCard = (props) => {
-  const [open,setOpen] = useState(false)
+  const [openInfo,setOpenInfo] = useState(false)
   const [ratingButtons, setRatingButtons] = useState({thumbsUp:false,thumbsDown:false})
   let [thumbsUpCounter,setThumbsUp] = useState(0)
   let [thumbsDownCounter,setThumbsDown] = useState(0)
+  const nominateContext = useContext(NomineeContext)
+  let [nominatedFlag,setNominatedFlag] = useState(false)
+  let [message, setSnackMessage] = useState('')
+  let [openSnack, setOpenSnack] = useState(false)
   const [addMovie] = useMutation(ADD_MOVIE)
   const [modifyRating]=useMutation(MODIFY_RATING)
 
+  useEffect(()=>{
+    if(!nominateContext.nominees[props.movie.id]){
+      setNominatedFlag(false)
+    }
+  },[nominateContext])
+  function handleSnackClose(event,reason){
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnack(false)
+  }
+  function addMovieToNominees(){
+    if(nominatedFlag){
+      setOpenSnack(true)
+      setSnackMessage(`You've already nominated ${props.movie.Title}.`)
+      return
+    }
+    if(Object.keys(nominateContext.nominees).length===5){
+      setOpenSnack(true)
+      setSnackMessage("You can only nominate five movies. Remove one from your list first.")
+      return
+    }
+    nominateContext.setNominees({...nominateContext.nominees,[props.movie.id]: {
+      title:props.movie.Title,
+      poster:props.movie.Poster
+      }
+    })
+    setSnackMessage(`Added ${props.movie.Title} to your list!`)
+    setOpenSnack(true)
+    setNominatedFlag(true)
+  }
   useEffect(()=>{
     if(props.movie.mdbCheck){
       setThumbsUp(props.movie.ThumbsUp)
@@ -119,11 +160,12 @@ const MovieCard = (props) => {
   }
 
   function handleOpenDialog(){
-    setOpen(true)
+    setOpenInfo(true)
   }
   const handleClose = () => {
-    setOpen(false);
+    setOpenInfo(false);
   };
+
   const classes = useStyles();
   return (
               <Grid item md={4}>
@@ -135,7 +177,6 @@ const MovieCard = (props) => {
                     title="Image title"
                   />
                 </CardActionArea>
-
                   <CardContent className={classes.cardContent}>
                     <Typography className = {classes.title} gutterBottom variant="h5" component="h2">
                       {props.movie.Title}
@@ -157,12 +198,28 @@ const MovieCard = (props) => {
                     <Button className = {classes.cardButtons} size="small" color="primary" onClick = {handleOpenDialog}>
                       More Info
                     </Button>
-                    <MoreInfoDialog details = {props.movie} open={open} handleClose={handleClose} />
+                    <Button onClick = {()=>{addMovieToNominees()}} className = {classes.cardButtons} size="small" color="primary">
+                      Nominate
+                    </Button>
                     <Button onClick = {()=>{handleRating('down')}} className = {classes.cardButtons} size="small" color="primary">
                       <ThumbDownIcon/>
                     </Button>
                   </CardActions>
                 </Card>
+                <Snackbar
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleSnackClose}
+        message={message}
+        action={
+          <React.Fragment>
+            <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackClose}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+        />
+                  <MoreInfoDialog details = {props.movie} open={openInfo} handleClose={handleClose} />
               </Grid>
   )
 }
