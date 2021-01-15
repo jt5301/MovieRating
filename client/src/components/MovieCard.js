@@ -95,11 +95,22 @@ const MovieCard = (props) => {
       setSnackMessage(`You've already nominated ${props.movie.Title}.`)
       return
     }
-    if(Object.keys(nominateContext.nominees).length===5){
-      setOpenSnack(true)
-      setSnackMessage("You can only nominate five movies. Remove one from your list first.")
-      return
+    let count = 0
+    for(let nominee in nominateContext.nominees){
+      if(count>=4){
+        setOpenSnack(true)
+        setSnackMessage("You can only nominate five movies. Remove one from your list first.")
+        return
+      }
+      if(nominateContext.nominees[nominee]){
+        console.log(count)
+        count+=1}
     }
+
+    console.log(nominateContext.nominees)
+
+
+
     nominateContext.setNominees({...nominateContext.nominees,[props.movie.id]: {
       title:props.movie.Title,
       poster:props.movie.Poster
