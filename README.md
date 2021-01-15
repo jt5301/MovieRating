@@ -1,11 +1,14 @@
-# Year One Movie Rating
+# Movie Rating
 
-Hey! This is my submission for YearOne's application process. The app is made with React, Material-UI, Node, Express and MongoDB. I'd like to incorporate GraphQL into the server eventually, just to see if I can simplify the calls I get from the server (and also to learn how to use GraphQL).
+Hey! This app lets you rate movies. The app ~is~ was originally made with React, Material-UI, Node, Express and MongoDB. I'd like to incorporate GraphQL into the server eventually, just to see if I can simplify the calls I get from the server (and also to learn how to use GraphQL).
 
 
 ## Edit:
-In the process of using GraphQL! The frontend is currently using Apollo to communicate with my GraphQL server, grabbing all neccesary information to display the movies and relevant DB info correctly. Essentially this has replaced all the GET routes that the frontend needed. Currently in the process of writing mutations for writing to the MongoDB database.
+In the process of using GraphQL. The frontend is currently using Apollo to communicate with my GraphQL server, grabbing all neccesary information to display the movies and relevant DB info correctly. Essentially this has replaced all the GET routes that the frontend needed. Currently in the process of writing mutations for writing to the MongoDB database.
 
+## Edit 2:
+Everything is now moved successfully onto a GraphQL server located on a single endpoint (using express). I'm also using Apollo Client on the frontend to communicate with the server. Funtionality wise though, everything is more or less the same as when it was made using a MERN stack.
+Deployed Version is here! https://jt-ratethismovie.herokuapp.com/
 ## Getting started
 
 Download / clone the project. You'll need to create an env file storing two variables. Place your env file in the server folder:
@@ -35,6 +38,6 @@ The third section is the more info overlay. You can find more details about the 
 
 ![movierating demo](http://g.recordit.co/hA9ZqISh6D.gif)
 
-I also added a loading animation to give the app some time to grab the numbers for the thumbs up and thumbs down, so that the user doesn't see the counters go from 0 to whatever number exists for the movie in the database.
+~I also added a loading animation to give the app some time to grab the numbers for the thumbs up and thumbs down, so that the user doesn't see the counters go from 0 to whatever number exists for the movie in the database.~ This loading animation now works when Apollo is in the loading state of fetching data. Since Apollo caches, if you enter a term that was previously searched for, Apollo just gets from the cache (which is updated if there are any changes made), making loading much faster / nonexistent.
 
 Thank you for checking this out!
