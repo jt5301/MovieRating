@@ -77,6 +77,7 @@ const MovieCard = (props) => {
   let [openSnack, setOpenSnack] = useState(false)
   const [addMovie] = useMutation(ADD_MOVIE)
   const [modifyRating]=useMutation(MODIFY_RATING)
+  const [doneSnack,setOpenDoneSnack] = useState(false)
 
   useEffect(()=>{
     if(!nominateContext.nominees[props.movie.id]){
@@ -88,6 +89,7 @@ const MovieCard = (props) => {
       return;
     }
     setOpenSnack(false)
+    setOpenDoneSnack(false)
   }
   function addMovieToNominees(){
     if(nominatedFlag){
@@ -97,19 +99,13 @@ const MovieCard = (props) => {
     }
     let count = 0
     for(let nominee in nominateContext.nominees){
-      if(count>=4){
+      if(nominateContext.nominees[nominee])count+=1
+      if(count===5){
         setOpenSnack(true)
         setSnackMessage("You can only nominate five movies. Remove one from your list first.")
         return
       }
-      if(nominateContext.nominees[nominee]){
-        console.log(count)
-        count+=1}
     }
-
-    console.log(nominateContext.nominees)
-
-
 
     nominateContext.setNominees({...nominateContext.nominees,[props.movie.id]: {
       title:props.movie.Title,
@@ -119,6 +115,15 @@ const MovieCard = (props) => {
     setSnackMessage(`Added ${props.movie.Title} to your list!`)
     setOpenSnack(true)
     setNominatedFlag(true)
+    let doneCount = 0
+    for(let nominee in nominateContext.nominees){
+      if(nominateContext.nominees[nominee])doneCount+=1
+    }
+    if(doneCount===4){
+      console.log('done')
+      setOpenDoneSnack(true)
+    }
+    console.log(doneCount)
   }
   useEffect(()=>{
     if(props.movie.mdbCheck){
@@ -218,38 +223,38 @@ const MovieCard = (props) => {
                   </CardActions>
                 </Card>
                 <Snackbar
-        open={openSnack}
-        autoHideDuration={6000}
-        onClose={handleSnackClose}
-        message={message}
-        action={
-          <React.Fragment>
-            <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackClose}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </React.Fragment>
-        }
-        />
+                open={openSnack}
+                autoHideDuration={3000}
+                onClose={handleSnackClose}
+                message={message}
+                action={
+                  <React.Fragment>
+                    <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackClose}>
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </React.Fragment>
+                }
+                />
+                <Snackbar
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={doneSnack}
+                autoHideDuration={3000}
+                onClose={handleSnackClose}
+                message={'Done! Click the "Nominees" button on the left to view your nominees.'}
+                action={
+                  <React.Fragment>
+                    <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackClose}>
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </React.Fragment>
+                }
+                />
                   <MoreInfoDialog details = {props.movie} open={openInfo} handleClose={handleClose} />
               </Grid>
   )
 }
 
 export default MovieCard
-
-
-
-  // useEffect(()=>{
-  //   async function getMovieFromDB(){
-  //     try {
-  //       let res = await axios.get(`/movies/getMovieFromDB/${props.movie.imdbID}`)
-  //       if(res.data){
-  //         setMovieInDB(true)
-  //       }
-  //     } catch (error) {
-  //       console.error(error)
-  //     }
-  //   }
-  //   // getMovieDetails()
-  //   getMovieFromDB()
-  // },[])
