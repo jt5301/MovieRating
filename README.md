@@ -1,9 +1,6 @@
 # Movie Rating
 
-Hey! This app lets you rate movies. The app ~is~ was originally made with React, Material-UI, Node, Express and MongoDB. I'd like to incorporate GraphQL into the server eventually, just to see if I can simplify the calls I get from the server (and also to learn how to use GraphQL).
-
-## Edit 3:
-I'd like to submit this project for the Shopify internship. A good chunk of the source project was written a few weeks ago as a practice application for learning GraphQL, but a lot of components idea were similar to the Shopify app that I wanted to use it as a base and add the required features to it. Please feel free to take a look at the previous edits to see how this project has evolved!
+Hey! This app lets you rate movies. The app ~is~ was originally made with React, Material-UI, Node, Express and MongoDB. I'd like to incorporate GraphQL into the server eventually, just to see if I can simplify the calls I get from the server (and also to learn how to use GraphQL) Originally made for Shopify's application process, I extended it to be used as a template to explore some new web technologies.
 
 ## Edit 2:
 Everything is now moved successfully onto a GraphQL server located on a single endpoint (using express). I'm also using Apollo Client on the frontend to communicate with the server. Funtionality wise though, everything is more or less the same as when it was made using a MERN stack.
