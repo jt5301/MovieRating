@@ -4,7 +4,6 @@ Hey! This app lets you rate movies. The app ~is~ was originally made with React,
 
 ## Edit 2:
 Everything is now moved successfully onto a GraphQL server located on a single endpoint (using express). I'm also using Apollo Client on the frontend to communicate with the server. Funtionality wise though, everything is more or less the same as when it was made using a MERN stack.
-Deployed Version is here! https://jt-ratethismovie.herokuapp.com/
 
 ## Edit:
 In the process of using GraphQL. The frontend is currently using Apollo to communicate with my GraphQL server, grabbing all neccesary information to display the movies and relevant DB info correctly. Essentially this has replaced all the GET routes that the frontend needed. Currently in the process of writing mutations for writing to the MongoDB database.
